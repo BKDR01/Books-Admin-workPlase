@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 .p-dropdown-items {
-    border-radius: 14px !important;
-    box-shadow: 3px 4px 10px 2px #00000040;
-    overflow: hidden; 
-    margin-top: 10px;
+  border-radius: 14px !important;
+  box-shadow: 3px 4px 10px 2px #00000040;
+  overflow: hidden;
+  margin-top: 10px;
 }
 
 .p-dropdown-items-wrapper {
@@ -12,8 +12,22 @@
   overflow: visible !important;
 }
 
-.p-dropdown-item{
-    background-color: white;
-    padding: 10px 22px;
-    height: 40px;
+.p-dropdown-item {
+  background-color: white;
+  padding: 10px 22px;
+  height: 40px;
+}
+
+.p-datepicker {
+  background-color: white;
+  padding: 20px;
+}
+
+.p-datepicker-header {
+  margin-bottom: 20px;
+}
+
+.p-datepicker-calendar td,
+th {
+  padding: 10px;
 }

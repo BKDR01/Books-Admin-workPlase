@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
 import InputForm from './../../Components/InputForm/InputForm.jsx';
-import Media from './../Media/Media.jsx';
+import Media from '../../Components/Media/Media.jsx';
 
 import user from './../../assets/Mask group (4).png';
 import qalam from './../../assets/IMG/Frame 1000003195.png';
 
-import 'primereact/resources/themes/saga-blue/theme.css';
-import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
 
 function Detalis() {
   const [showMedia, setShowMedia] = useState(false);
