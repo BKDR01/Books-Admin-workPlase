@@ -1,17 +1,24 @@
-import { useState } from 'react'
 import './App.css'
 import Loginin from './Pages/Login/Loginin'
 import HomePage from './Pages/HomePage/HomePage'
-import Detalis from './Pages/MyDetails/Detalis.jsx';
-import Media from './Pages/Media/Media.jsx';
+import { Route, Routes } from 'react-router'
+import Book from './Pages/Book/Book'
+import Layout from './Pages/Layout/Layout'
+
 function App() {
 
   return (
     <>
-      {/* <Loginin /> */}
-      {/* <HomePage /> */}
-      {/* <Media/> */}
-      <Detalis/>
+      <Routes>
+        <Route path='/loginin' element={<Loginin />} />
+
+        <Route path='/' element={<Layout />} >
+          <Route index element={<HomePage />} />
+          <Route path='/book' element={<Book />} />
+        </Route>
+
+
+      </Routes>
     </>
   )
 }
