@@ -5,14 +5,15 @@ import { IoSearchSharp, IoUmbrellaSharp } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 import { MdInsertDriveFile } from "react-icons/md";
 import { IoMdRocket, IoMdCalendar } from "react-icons/io";
+import { Link } from 'react-router';
 
 function Nav({ setOpen, open }) {
   const cities = [
-    { name: 'My details', icon: <FaUserCircle />, },
-    { name: 'My calendar', icon: <IoMdCalendar /> },
-    { name: 'Vacations', icon: <IoUmbrellaSharp /> },
-    { name: 'Corporate CV', icon: <MdInsertDriveFile /> },
-    { name: 'Perfomance review', icon: <IoMdRocket /> }
+    { name: 'My details', icon: <FaUserCircle />, path: "/details" },
+    { name: 'My calendar', icon: <IoMdCalendar />, path: "/calendar" },
+    { name: 'Vacations', icon: <IoUmbrellaSharp />, path: "/vacations" },
+    { name: 'Corporate CV', icon: <MdInsertDriveFile />, path: "/cv" },
+    { name: 'Perfomance review', icon: <IoMdRocket />, path: "/perfomance" }
   ];
 
   return (
@@ -26,9 +27,12 @@ function Nav({ setOpen, open }) {
               placeholder="Xajiqurbonov.A"
               className="w-[180px] bg-white"
               itemTemplate={(option) =>
-                <div className="flex items-center gap-2">
-                  {option.icon}<span>{option.name}</span>
-                </div>}
+                <Link to={option.path}>
+                  <div className="flex items-center gap-2">
+                    {option.icon}<span>{option.name}</span>
+                  </div>
+                </Link>
+              }
               onClick={() => setOpen(!open)} />
           </div>
           <div className='flex items-center'>

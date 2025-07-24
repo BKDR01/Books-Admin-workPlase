@@ -21,7 +21,7 @@ const Layout = () => {
         { name: 'help', icon: <IoMdHelp className='w-[24px] h-[24px]' />, path: '/help' },
     ]
     return (
-        <div className='bg-[#F1F1F1] h-[100vh]'>
+        <div className='bg-[#F1F1F1] '>
 
             <Nav setOpen={setOpen} open={open} />
             <div onClick={() => setOpen(!open)} className={`absolute z-10 h-[100%] w-full ${open ? "bg-[#1919197c]" : "hidden"}`}></div>
@@ -44,8 +44,6 @@ const Layout = () => {
                     <Outlet />
                 </main>
             </div>
-
-
 
         </div>
     )
