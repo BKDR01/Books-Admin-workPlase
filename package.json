@@ -11,11 +11,20 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+<<<<<<< HEAD
     "primereact": "^10.9.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-router": "^7.7.0",
+=======
+    "primeicons": "^7.0.0",
+    "primereact": "^10.9.6",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.60.0",
+    "react-icons": "^5.5.0",
+>>>>>>> 17c8c0f377184a4ceb3e9b8ffce53626aecc021c
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
