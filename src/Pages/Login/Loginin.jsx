@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import useAuthStore from '../../store/auth';
 
 function Login() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const login = useAuthStore((state) => state.login )
+
+  const handleLogin = async () =>{
+    try{
+      const res= await loginUser()
+    }catch (error){
+      alert("login xato")
+    }
+  }
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
