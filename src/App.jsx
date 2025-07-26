@@ -19,7 +19,6 @@ function App() {
           <Route path='/details' element={<Detalis />} />
         </Route>
 
-
       </Routes>
     </>
   )

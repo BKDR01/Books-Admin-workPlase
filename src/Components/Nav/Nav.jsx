@@ -6,6 +6,8 @@ import { FaUserCircle } from "react-icons/fa";
 import { MdInsertDriveFile } from "react-icons/md";
 import { IoMdRocket, IoMdCalendar } from "react-icons/io";
 import { Link } from 'react-router';
+import { ImExit } from "react-icons/im";
+
 
 function Nav({ setOpen, open }) {
   const cities = [
@@ -13,7 +15,8 @@ function Nav({ setOpen, open }) {
     { name: 'My calendar', icon: <IoMdCalendar />, path: "/calendar" },
     { name: 'Vacations', icon: <IoUmbrellaSharp />, path: "/vacations" },
     { name: 'Corporate CV', icon: <MdInsertDriveFile />, path: "/cv" },
-    { name: 'Perfomance review', icon: <IoMdRocket />, path: "/perfomance" }
+    { name: 'Perfomance review', icon: <IoMdRocket />, path: "/perfomance" },
+    { name: 'Exit', icon: <ImExit />, path: "/loginin" },
   ];
 
   return (
