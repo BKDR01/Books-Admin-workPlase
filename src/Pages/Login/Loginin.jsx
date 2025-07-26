@@ -1,10 +1,27 @@
 import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { loginUser } from '../../api/auth';
+import useAuthStore from '../../store/auth';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
+
+  const login = useAuthStore((state) => state.login)
+  const navigate = useNavigate()
+
+  const handleLogin = async () => {
+    try {
+      const res = await loginUser(form)
+      login(res.data.accessToken)
+
+      navigate("/")
+    } catch (error) {
+      alert("login xato" + (error.response?.data?.message || "Server xatosi"))
+      console.log(error.response);
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
@@ -24,8 +41,7 @@ function Login() {
             type="email"
             placeholder="example@mail.com"
             className="w-[full] px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>
 
@@ -38,13 +54,13 @@ function Login() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 outline-none pr-10"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-9 text-gray-500"
+            className="absolute right-3 top-9 text-gray-500 cursor-pointer"
           >
             {showPassword ? (
               <AiOutlineEyeInvisible className="w-5 h-5" />
@@ -61,6 +77,7 @@ function Login() {
         <button
           type="submit"
           className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-full transition"
+          onClick={handleLogin}
         >
           LOG IN
         </button>
