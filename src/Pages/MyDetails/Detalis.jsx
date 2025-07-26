@@ -7,7 +7,6 @@ import Media from '../../Components/Media/Media.jsx';
 import user from './../../assets/Mask group (4).png';
 import qalam from './../../assets/IMG/Frame 1000003195.png';
 
-
 function Detalis() {
   const [showMedia, setShowMedia] = useState(false);
   const [selectedImage, setSelectedImage] = useState(user);
@@ -24,8 +23,22 @@ function Detalis() {
   });
 
   const onSubmit = (data) => console.log(data);
-  const handleImageSelect = (image) => setSelectedImage(image);
+  const handleImageSelect = (image) => {
+    setSelectedImage(image);
+    setShowMedia(false); // Media yopilgandan keyin Detalis qaytib chiqadi
+  };
 
+  // 🟡 Faqat Media komponentini ko‘rsatamiz
+  if (showMedia) {
+    return (
+      <Media
+        onClose={() => setShowMedia(false)}
+        onSelectImage={handleImageSelect}
+      />
+    );
+  }
+
+  // 🟢 Aks holda Detalis formasi ko‘rsatiladi
   return (
     <div className="max-w-[700px] mx-auto">
       <div className="text-center pt-8">
@@ -51,14 +64,7 @@ function Detalis() {
         </div>
       </div>
 
-      {showMedia && (
-        <Media
-          onClose={() => setShowMedia(false)}
-          onSelectImage={handleImageSelect}
-        />
-      )}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-6">
-
         <div className="flex gap-7">
           <InputForm label="Ism" name="ism" placeholder="Ismingiz" type="text" register={register} />
           <InputForm label="Familiya" name="familiya" placeholder="Familiyangiz" type="text" register={register} />
@@ -100,4 +106,5 @@ function Detalis() {
     </div>
   );
 }
+
 export default Detalis;

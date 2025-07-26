@@ -5,21 +5,19 @@ import { Route, Routes } from 'react-router'
 import Book from './Pages/Book/Book'
 import Detalis from './Pages/MyDetails/Detalis'
 import Layout from './Pages/Layout/Layout'
-
+import News from './Pages/News/News.jsx';
 function App() {
 
   return (
     <>
       <Routes>
         <Route path='/loginin' element={<Loginin />} />
-
         <Route path='/' element={<Layout />} >
           <Route index element={<HomePage />} />
           <Route path='/book' element={<Book />} />
+          <Route path='/news' element={<News />} />
           <Route path='/details' element={<Detalis />} />
         </Route>
-
-
       </Routes>
     </>
   )
