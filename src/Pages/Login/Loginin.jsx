@@ -3,12 +3,23 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useAuthStore from '../../store/auth';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const login = useAuthStore((state) => state.login )
 
+  const login = useAuthStore((state) => state.login)
+  const navigate = useNavigate()
 
+  const handleLogin = async () => {
+    try {
+      const res = await loginUser(form) 
+      login(res.data.accessToken)
 
+      navigate("/")
+    } catch (error) {
+      alert("login xato" + (error.response?.data?.message || "Server xatosi"))
+      console.log(error.response);
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
