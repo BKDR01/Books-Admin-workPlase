@@ -32,58 +32,60 @@ function Media({ onClose, onSelectImage }) {
     const handleDragOver = (e) => e.preventDefault();
 
     const handleNext = () => {
-        if (imageFile) onSelectImage(imageFile);
-        onClose();
+        if (imageFile) {
+            onSelectImage(imageFile);
+            onClose(); // faqat componentni yopadi
+        }
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-[600px] relative">
+        <div className="bg-white rounded-lg p-6 w-full max-w-[700px] mx-auto">
+            <div className="text-right">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-500 text-xl"
+                    className="text-gray-500 text-xl font-bold"
                 >
                     ×
                 </button>
+            </div>
 
-                <h1 className="text-4xl text-center">Media</h1>
-                <div className="w-full h-[200px] border-4 border-dashed border-[#2F80ED] rounded-[10px] mt-[40px] flex flex-col items-center justify-center cursor-pointer"
-                    onClick={handleBrowseClick}
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                >
-                    {preview ? (
-                        <img
-                            src={preview}
-                            alt="Preview"
-                            className="h-full object-contain"
-                        />
-                    ) : (
-                        <>
-                            <img
-                                src={upload}
-                                alt="Upload Icon"
-                                className="w-[50px] h-[50px]"
-                            />
-                            <h2 className="text-[16px] pt-[10px] text-center">
-                                Drop your image here or{' '}
-                                <span className="text-[#2F80ED] underline">Browse</span>
-                            </h2>
-                            <p className="text-[#89868D] text-[14px] pt-[10px] text-center">
-                                Support: JPG, JPEG, PNG
-                            </p>
-                        </>
-                    )}
-                    <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleFileChange}
+            <h1 className="text-4xl text-center">Media</h1>
+            <div
+                className="w-full h-[200px] border-4 border-dashed border-[#2F80ED] rounded-[10px] mt-[40px] flex flex-col items-center justify-center cursor-pointer"
+                onClick={handleBrowseClick}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+            >
+                {preview ? (
+                    <img
+                        src={preview}
+                        alt="Preview"
+                        className="h-full object-contain"
                     />
-                </div>
+                ) : (
+                    <>
+                        <img src={upload} alt="Upload Icon" className="w-[50px] h-[50px]" />
+                        <h2 className="text-[16px] pt-[10px] text-center">
+                            Drop your image here or{' '}
+                            <span className="text-[#2F80ED] underline">Browse</span>
+                        </h2>
+                        <p className="text-[#89868D] text-[14px] pt-[10px] text-center">
+                            Support: JPG, JPEG, PNG
+                        </p>
+                    </>
+                )}
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                />
+            </div>
+
+            <div className="text-right">
                 <button
-                    className="px-8 py-2 bg-[#2F80ED] text-white rounded-md mt-6 float-right"
+                    className="px-8 py-2 bg-[#2F80ED] text-white rounded-md mt-6"
                     onClick={handleNext}
                 >
                     Next
@@ -92,4 +94,5 @@ function Media({ onClose, onSelectImage }) {
         </div>
     );
 }
+
 export default Media;
