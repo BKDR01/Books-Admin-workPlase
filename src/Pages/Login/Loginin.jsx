@@ -4,7 +4,6 @@ import useAuthStore from '../../store/auth';
 
 function Login() {
   const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const login = useAuthStore((state) => state.login )
 
