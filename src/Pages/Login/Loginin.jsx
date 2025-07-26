@@ -7,13 +7,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const login = useAuthStore((state) => state.login )
 
-  const handleLogin = async () =>{
-    try{
-      const res= await loginUser()
-    }catch (error){
-      alert("login xato")
-    }
-  }
+
 
 
   return (
