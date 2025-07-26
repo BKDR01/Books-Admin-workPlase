@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import upload from './../../assets/IMG/upload.png';
 
 function Media({ onClose, onSelectImage }) {
