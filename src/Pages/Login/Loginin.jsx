@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import useAuthStore from '../../store/auth';
@@ -11,7 +12,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await loginUser(form) 
+      const res = await loginUser(form)
       login(res.data.accessToken)
 
       navigate("/")
@@ -39,8 +40,8 @@ function Login() {
             type="email"
             placeholder="example@mail.com"
             className="w-[full] px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>
 
@@ -53,8 +54,8 @@ function Login() {
             type={showPassword ? 'text' : 'password'}
             placeholder="Password"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 outline-none pr-10"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
           <button
             type="button"
@@ -75,6 +76,7 @@ function Login() {
 
         <button
           type="submit"
+          onClick={handleLogin}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-full transition"
         >
           LOG IN

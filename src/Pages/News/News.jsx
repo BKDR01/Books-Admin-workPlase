@@ -2,7 +2,6 @@ import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { Calendar } from 'primereact/calendar';
 import download from './../../assets/IMG/download.png';
-
 function News() {
     const { register, handleSubmit, control } = useForm();
 
