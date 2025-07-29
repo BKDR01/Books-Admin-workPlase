@@ -1,109 +1,79 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Calendar } from 'primereact/calendar';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { addNews } from '../../api/auth';
+import NewsForm from './../../Components/NewsForm/NewsForm.jsx';
+import ImageUploader from './../../Components/ImageUploader/ImageUploader.jsx';
 import download from './../../assets/IMG/download.png';
+
 function News() {
-    const { register, handleSubmit, control } = useForm();
+    const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
+    const [thumbnail, setThumbnail] = useState(null);
+    const [galleryImages, setGalleryImages] = useState([]);
 
-    const onSubmit = (data) => {
-        console.log(data);
-    };
+    const onSubmit = async (data) => {
+        try {
+            const formData = new FormData();
+            formData.append("title", data.title);
+            formData.append("context", data.context);
+            formData.append("publication_date", data.publication_date.toISOString());
+            formData.append("source", data.source || "");
+            formData.append("language", data.language);
+            formData.append("active", true);
+            if (thumbnail) formData.append("thumbnail", thumbnail.file);
+            galleryImages.forEach((img) => formData.append("images", img.file));
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            const input = document.getElementById('fileUploadInput');
-            input.files = dataTransfer.files;
+            const response = await addNews(formData);
+            console.log("✅ News added successfully:", response.data);
+        } catch (error) {
+            console.error("❌ Error:", error);
+            if (error.response) {
+                console.log("🔴 Server response:", error.response.data);
+            }
         }
     };
 
+    const handleFiles = (files, type) => {
+        const imageFiles = files.filter(file => file.type.startsWith('image/'));
+        const previews = imageFiles.map(file => ({ file, url: URL.createObjectURL(file) }));
+
+        if (type === 'thumbnail') {
+            setThumbnail(previews[0]);
+        } else {
+            const updated = [...galleryImages, ...previews];
+            setGalleryImages(updated);
+
+            const dataTransfer = new DataTransfer();
+            updated.forEach(item => dataTransfer.items.add(item.file));
+            document.getElementById('galleryInput').files = dataTransfer.files;
+        }
+    };
+
+    const removeGalleryImage = (index) => {
+        const updated = galleryImages.filter((_, i) => i !== index);
+        setGalleryImages(updated);
+
+        const dataTransfer = new DataTransfer();
+        updated.forEach(item => dataTransfer.items.add(item.file));
+        document.getElementById('galleryInput').files = dataTransfer.files;
+    };
+
     return (
-        <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-[800px] mx-auto">
+        <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-full mx-auto">
             <form onSubmit={handleSubmit(onSubmit)}>
-                <h1 className='text-2xl'>News</h1>
-                <p className='text-[#89868D] pt-[10px]'>Create news</p>
-
-                <div className="flex items-center justify-between mt-[30px] w-[690px]">
-                    <div>
-                        <h1 className='text-[#3A3541]'>News Title</h1>
-                        <input
-                            type="text"
-                            {...register('title')}
-                            className='w-[330px] h-[46px] bg-[#F4F5F9] border-2 rounded-md border-[#DBDCDE] mt-[10px] focus:outline-none focus:border-transparent'
-                        />
-                    </div>
-                    <div className="w-[330px]">
-                        <label className="text-[#3A3541] block">News Date</label>
-                        <Controller
-                            name="newsDate"
-                            control={control}
-                            render={({ field }) => (
-                                <Calendar
-                                    value={field.value || null}
-                                    onChange={(e) => field.onChange(e.value)}
-                                    dateFormat="mm/dd/yy"
-                                    placeholder="MM/DD/YYYY"
-                                    mask="99/99/9999"
-                                    className="w-full mt-[10px]"
-                                    inputClassName="bg-[#F4F5F9] text-[#3A3541] border-2 border-[#DBDCDE] rounded-md px-3 py-1 h-[46px] w-full focus:outline-none"
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
-
-                <div className="mt-[30px]">
-                    <h1 className='text-[#3A3541]'>New Text</h1>
-                    <textarea
-                        {...register('text')}
-                        className='w-[690px] h-[334px] mt-[10px] border-2 rounded-md border-[#DBDCDE] bg-[#F4F5F9] text-2xl focus:outline-none focus:border-transparent resize-none'>
-                    </textarea>
-                </div>
-
-                <div className="w-[690px] h-[220px] bg-[#F4F5F9] mt-[20px] border-2 rounded-md border-[#DBDCDE]">
-                    <h1 className='text-black pt-[10px] pl-[30px]'>Starting File</h1>
-                    <div
-                        className="w-[630px] h-[125px] border-3 rounded-md border-dashed border-[#6E39CB] mx-auto mt-[25px]"
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
-                    >
-                        <img
-                            src={download}
-                            alt="Upload"
-                            className='mx-auto mt-[10px] cursor-pointer'
-                            onClick={() => document.getElementById('fileUploadInput').click()}
-                        />
-
-                        <div>
-                            <h1 className='text-center pt-[10px]'>
-                                <span className='text-[#6E39CB]'>Click to upload</span> or drag and drop
-                            </h1>
-                            <h1 className='text-center'>SVG, PNG, JPG or GIF</h1>
-                            <p className='text-[#89868D] text-center'>(max, 800x400px)</p>
-                        </div>
-
-                        <input
-                            type="file"
-                            id="fileUploadInput"
-                            {...register('file')}
-                            className="hidden"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex items-center gap-[15px] mt-[25px] justify-end">
-                    <button
-                        type="button"
-                        className='px-[40px] py-[10px] border-2 rounded-md border-[#6E39CB] text-[#6E39CB]'>
+                <NewsForm register={register} control={control} errors={errors} />
+                <ImageUploader
+                    thumbnail={thumbnail}
+                    galleryImages={galleryImages}
+                    handleFiles={handleFiles}
+                    removeGalleryImage={removeGalleryImage}
+                    download={download}
+                />
+                <div className="flex items-center gap-4 mt-6 justify-end">
+                    <button type="button" className='px-6 py-2 border-2 rounded-md border-[#6E39CB] text-[#6E39CB] hover:bg-[#f3f0ff] transition'>
                         Cancel
                     </button>
-                    <button
-                        type="submit"
-                        className='px-[20px] py-[11px] bg-[#6E39CB] text-white rounded-md'>
-                        Create project
+                    <button type="submit" className='px-6 py-2 bg-[#6E39CB] text-white rounded-md hover:bg-[#5834b4] transition'>
+                        Create News
                     </button>
                 </div>
             </form>
