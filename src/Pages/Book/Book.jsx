@@ -17,7 +17,7 @@ useEffect(() => {
       console.log(res.data); 
     })
     .catch(err => {
-      console.log("beck end kot", err); 
+      console.log("beck end xato", err); 
     });
 }, []);
   console.log(api);
