@@ -1,6 +1,7 @@
+import React, { useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { IoMdCloudDownload } from "react-icons/io";
-import React, { useState } from 'react';
+import { Calendar } from 'primereact/calendar';
 
 const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemove, files }) => {
     const [selectedItem, setSelectedItem] = useState(null);
@@ -33,7 +34,7 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                     />
                 </label>
 
-                <div className="w-[100%] flex gap-[30px] mt-[53px]">
+                <div className="w-[100%] flex flex-wrap gap-[30px] mt-[53px]">
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                         Book format
                         <Dropdown
@@ -54,6 +55,25 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             placeholder="Select Item"
                             className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                         />
+                    </label>
+                    <label className="flex flex-wrap w-[100%] gap-[12px] text-[#3A3541] text-[14px]">
+                        publishedYear 
+                                <Calendar
+                                    dateFormat="mm/dd/yy"
+                                    placeholder="MM/DD/YYYY"
+                                    mask="99/99/9999"
+                                    className="w-full mt-[10px]"
+                                    inputClassName="bg-[#F4F5F9] text-[#3A3541] border-2 border-[#DBDCDE] rounded-md px-3 py-1 h-[46px] w-full focus:outline-none"
+                                />
+                    </label>
+                    <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
+                        auth 
+                    <input type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
+                    </label>
+                    <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
+                        price 
+                    <input type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
+
                     </label>
                 </div>
             </div>

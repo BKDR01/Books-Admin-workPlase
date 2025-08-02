@@ -26,7 +26,7 @@ function Login() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4">
       <h2 className="text-[34px] w-[440px]  font-bold text-center mb-20">
-        Tuproqqal’a tumani axborot-kutubxona markazi
+        Tuproqqal’a tumani axborot-kutubxona markazi -
       </h2>
 
       <div className="w-[226px] max-w-sm">

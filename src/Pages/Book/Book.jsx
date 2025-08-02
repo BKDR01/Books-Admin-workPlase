@@ -1,9 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FormBlock from '../../Components/FormBlock/FormBlock';
+import { Calendar } from 'primereact/calendar';
+import axios from 'axios';
+import { data } from 'react-router-dom';
 
 const Book = () => {
   const [formList, setFormList] = useState([{}]);
   const [files, setFiles] = useState({});
+
+  const api = 'https://lib.qaxramonov.uz/api/v1/admin/books/add'
+
+
+useEffect(() => {
+  axios.get(api)
+    .then(res => {
+      console.log(res.data); 
+    })
+    .catch(err => {
+      console.log("beck end xato", err); 
+    });
+}, []);
+  console.log(api);
+  
 
   const items = [
     { label: 'Uzbekcha', value: 'uz' },
