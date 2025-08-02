@@ -10,17 +10,6 @@ function NewsForm({ register, control, errors }) {
                     <h1 className='text-2xl'>News</h1>
                     <p className='text-[#89868D] pt-[10px]'>Create news</p>
                 </div>
-                <div className="w-40">
-                    <label htmlFor="language" className="block mb-1 text-sm text-gray-600">
-                        Tilni tanlang:
-                    </label>
-                    <select {...register("language")} className="border rounded px-2 py-1">
-                        <option value="UZ">O'zbek</option>
-                        <option value="RU">Русский</option>
-                        <option value="EN">English</option>
-                    </select>
-                    {errors.language && <p className="text-red-500 text-sm">{errors.language.message}</p>}
-                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">

@@ -7,8 +7,8 @@ import Detalis from './Pages/MyDetails/Detalis'
 import Layout from './Pages/Layout/Layout'
 import News from './Pages/News/News.jsx';
 import ProtectedRoute from './Components/ProtectedRoute.jsx'
-function App() {
 
+function App() {
   return (
     <>
       <Routes>
@@ -16,23 +16,28 @@ function App() {
         <Route path='/' element={
           <ProtectedRoute>
             <Layout />
-          </ProtectedRoute>} >
+          </ProtectedRoute>
+        }>
           <Route index element={
             <ProtectedRoute>
               <HomePage />
-            </ProtectedRoute>} />
-          <Route path='/book' element={
+            </ProtectedRoute>
+          } />
+          <Route path='book' element={
             <ProtectedRoute>
               <Book />
-            </ProtectedRoute>} />
-          <Route path='/news' element={
+            </ProtectedRoute>
+          } />
+          <Route path='news' element={
             <ProtectedRoute>
               <News />
-            </ProtectedRoute>} />
-          <Route path='/details' element={
+            </ProtectedRoute>
+          } />
+          <Route path='details' element={
             <ProtectedRoute>
               <Detalis />
-            </ProtectedRoute>} />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </>
