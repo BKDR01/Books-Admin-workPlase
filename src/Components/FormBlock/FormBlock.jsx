@@ -3,32 +3,44 @@ import { Dropdown } from 'primereact/dropdown';
 import { IoMdCloudDownload } from "react-icons/io";
 import { Calendar } from 'primereact/calendar';
 
-const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemove, files }) => {
+const FormBlock = ({ index, language, format, category, handleFileAdd, handleFileRemove, files }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [selectedFrom, setSelectedFrom] = useState(null);
     const [selectedBook, setSelectedBook] = useState(null);
 
-    const [dataForm, setDataForm] = useState([{}])
+    const [dataForm, setDataForm] = useState({
+        title: '',
+        pages: '',
+        language: '',
+        format: '',
+        category: '',
+        publishedYear: '',
+        author: '',
+        description: '',
+        image: null,
+        file: null
+    })
 
     return (
         <div className="mt-[24px] pt-[24px]">
             <div className="flex items-center justify-between flex-wrap">
                 <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                     Book Name
-                    <input type="text" onChange={(e) => setDataForm(e.target.value)} className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
+                    <input type="text" value={dataForm.title}
+                        onChange={(e) => setDataForm(prev => ({ ...prev, title: e.target.value }))} className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
                 </label>
 
                 <label className="flex flex-wrap w-[150px] gap-[12px] text-[#3A3541] text-[14px]">
                     Number of pages
-                    <input type="number" className="w-[150px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" placeholder="123" />
+                    <input onChange={(e) => setDataForm(prev => ({ ...prev, pages: e.target.value }))} type="number" className="w-[150px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" placeholder="123" />
                 </label>
 
                 <label className="flex flex-wrap w-[150px] gap-[12px] text-[#3A3541] text-[14px]">
                     Language
                     <Dropdown
-                        value={selectedItem}
-                        onChange={(e) => setSelectedItem(e.value)}
-                        options={items}
+                        value={dataForm.language}
+                        onChange={(e) => setDataForm(prev => ({ ...prev, language: e.target.value }))}
+                        options={language}
                         placeholder="Select Item"
                         className="w-[150px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                     />
@@ -38,8 +50,8 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                         Book format
                         <Dropdown
-                            value={selectedFrom}
-                            onChange={(e) => setSelectedFrom(e.value)}
+                            value={dataForm.format}
+                            onChange={(e) => setDataForm(prev => ({ ...prev, format: e.target.value }))}
                             options={format}
                             placeholder="Select Item"
                             className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
@@ -47,33 +59,34 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                     </label>
 
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
-                        Book
+                        Book category
                         <Dropdown
-                            value={selectedBook}
-                            onChange={(e) => setSelectedBook(e.value)}
-                            options={books}
+                            value={dataForm.category}
+                            onChange={(e) => setDataForm(prev => ({ ...prev, category: e.target.value }))}
+                            options={category}
                             placeholder="Select Item"
                             className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                         />
                     </label>
-                    <label className="flex flex-wrap w-[100%] gap-[12px] text-[#3A3541] text-[14px]">
-                        publishedYear 
-                                <Calendar
-                                    dateFormat="mm/dd/yy"
-                                    placeholder="MM/DD/YYYY"
-                                    mask="99/99/9999"
-                                    className="w-full mt-[10px]"
-                                    inputClassName="bg-[#F4F5F9] text-[#3A3541] border-2 border-[#DBDCDE] rounded-md px-3 py-1 h-[46px] w-full focus:outline-none"
-                                />
+                    <label className="flex flex-wrap w-[50%] gap-[12px] text-[#3A3541] text-[14px]">
+                        Published Year
+                        <Calendar
+                            dateFormat="mm/dd/yy"
+                            placeholder="MM/DD/YYYY"
+                            onChange={(e) => setDataForm(prev => ({ ...prev, publishedYear: e.target.value }))}
+                            mask="99/99/9999"
+                            className="w-full mt-[10px]"
+                            inputClassName="bg-[#F4F5F9] text-[#3A3541] border-2 border-[#DBDCDE] rounded-md px-3 py-1 h-[46px] w-full focus:outline-none"
+                        />
                     </label>
                     <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
-                        auth 
-                    <input type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
+                        Author
+                        <input onChange={(e) => setDataForm(prev => ({ ...prev, author: e.target.value }))} type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
                     </label>
-                    <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
-                        price 
-                    <input type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
 
+                    <label className='w-[100%]'>
+                        Description
+                        <textarea onChange={(e) => setDataForm(prev => ({ ...prev, description: e.target.value }))} className='mt-[10px] w-full h-52 py-[13px] resize-none pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0'></textarea>
                     </label>
                 </div>
             </div>
