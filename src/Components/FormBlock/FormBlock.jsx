@@ -7,12 +7,14 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
     const [selectedFrom, setSelectedFrom] = useState(null);
     const [selectedBook, setSelectedBook] = useState(null);
 
+    const [dataForm, setDataForm] = useState([{}])
+
     return (
         <div className="mt-[24px] pt-[24px]">
             <div className="flex items-center justify-between flex-wrap">
                 <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                     Book Name
-                    <input type="text" className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
+                    <input type="text" onChange={(e) => setDataForm(e.target.value)} className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0" />
                 </label>
 
                 <label className="flex flex-wrap w-[150px] gap-[12px] text-[#3A3541] text-[14px]">

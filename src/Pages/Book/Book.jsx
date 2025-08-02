@@ -43,6 +43,11 @@ const Book = () => {
     setFiles({ ...updated });
   };
 
+  const handleSubmitBookData = () => {
+    
+
+  }
+
   return (
     <div className="w-[750px] p-[30px] rounded-[8px] bg-white shadow-[0_0_4px_0_#00000026] mx-auto font-[Lato]">
       <div>
