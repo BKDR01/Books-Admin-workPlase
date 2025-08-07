@@ -1,82 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FormBlock from '../../Components/FormBlock/FormBlock';
-import { addBook } from '../../api/auth';
 
 const Book = () => {
-
-  const [formList, setFormList] = useState([
-    {
-      title: '',
-      pages: '',
-      language: '',
-      format: '',
-      category: '',
-      publishedYear: '',
-      author: '',
-      description: '',
-      image: null,
-      file: null
-    }
-  ]);
-
-  const [files, setFiles] = useState({});
-
-  const handleAdd = () => {
-    setFormList([...formList, {
-      title: '',
-      pages: '',
-      language: '',
-      format: '',
-      category: '',
-      publishedYear: '',
-      author: '',
-      description: '',
-      image: null,
-      file: null
-    }]);
-  };
-
-  const handleChangeForm = (index, updatedForm) => {
-    const updatedList = [...formList];
-    updatedList[index] = updatedForm;
-    setFormList(updatedList);
-  };
-
-  const handleFileAdd = (formIndex, file) => {
-    const updated = { ...files };
-    updated[formIndex] = [...(updated[formIndex] || []), file];
-    setFiles(updated);
-  };
-
-  const handleFileRemove = (formIndex, fileIndex) => {
-    const updated = { ...files };
-    updated[formIndex].splice(fileIndex, 1);
-    setFiles({ ...updated });
-  };
-
-  const postBookData = async () => {
-    try {
-      for (let form of formList) {
-        const formData = new FormData();
-        formData.append('title', form.title);
-        formData.append('pages', form.pages);
-        formData.append('language', form.language);
-        formData.append('format', form.format);
-        formData.append('category', form.category);
-        formData.append('publishedYear', form.publishedYear?.toISOString?.() || '');
-        formData.append('author', form.author);
-        formData.append('description', form.description);
-        if (form.image) formData.append('image', form.image);
-        if (form.file) formData.append('file', form.file);
-
-        await addBook(formData);
-      }
-
-      console.log('✅ All books uploaded successfully');
-    } catch (error) {
-      console.error('❌ Upload error:', error);
-    }
-  };
 
   const items = [
     { label: 'Uzbekcha', value: 'uz' },
@@ -99,6 +24,7 @@ const Book = () => {
     { label: 'Prezident asarlari', value: 'prezident' },
     { label: 'Hikoyalar', value: 'hikoya' },
   ];
+
   return (
     <div className="w-[750px] p-[30px] rounded-[8px] bg-white shadow-[0_0_4px_0_#00000026] mx-auto font-[Lato]">
       <div>
@@ -111,13 +37,6 @@ const Book = () => {
           key={index}
           index={index}
           dataForm={form}
-          language={items}
-          format={format}
-          category={books}
-          handleFileAdd={handleFileAdd}
-          handleFileRemove={handleFileRemove}
-          files={files}
-          onChange={(updated) => handleChangeForm(index, updated)}
         />
       ))}
 

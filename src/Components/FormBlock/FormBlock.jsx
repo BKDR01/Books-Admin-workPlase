@@ -6,14 +6,10 @@ import { Calendar } from 'primereact/calendar';
 const FormBlock = ({ index, language, format, category, handleFileAdd, handleFileRemove, files, dataForm, onChange }) => {
 
 
-    const handleInputChange = (field, value) => {
-        onChange({ ...dataForm, [field]: value });
-    };
-
     return (
         <div className="mt-[24px] pt-[24px]">
             <div className="flex items-center justify-between flex-wrap">
-                
+
                 {/* ------------------------------------------------- */}
                 <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                     Book Name
