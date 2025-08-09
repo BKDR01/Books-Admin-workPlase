@@ -21,7 +21,10 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         type="text"
                         value={formData?.bookName || ''}
                         className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
-                        onChange={(e) => handleInput('bookName', e.target.value)}
+                        onChange={(e) => {
+
+                            handleInput('bookName', e.target.value)
+                        }}
                     />
                 </label>
                 <label className="flex flex-wrap w-[150px] gap-[12px] text-[#3A3541] text-[14px]">
@@ -31,14 +34,18 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         value={Number(formData?.pages) || ''}
                         className="w-[150px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                         placeholder="123"
-                        onChange={(e) => handleInput('pages', e.target.value)}
+                        onChange={(e) => {
+                            handleInput('pages', Number(e.target.value))
+                        }}
                     />
                 </label>
                 <label className="flex flex-wrap w-[150px] gap-[12px] text-[#3A3541] text-[14px]">
                     Language
                     <Dropdown
                         value={formData?.language || null}
-                        onChange={(e) => handleInput('language', e.value)}
+                        onChange={(e) => {
+                            handleInput('language', e.value)
+                        }}
                         options={items}
                         placeholder="Select Language"
                         className="w-[150px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
@@ -49,7 +56,9 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         Book format
                         <Dropdown
                             value={formData?.format || null}
-                            onChange={(e) => handleInput('format', e.value)}
+                            onChange={(e) => {
+                                handleInput('format', e.value)
+                            }}
                             options={format}
                             placeholder="Select Format"
                             className="w-[330px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
@@ -59,7 +68,9 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         Book
                         <Dropdown
                             value={formData?.book || null}
-                            onChange={(e) => handleInput('book', e.value)}
+                            onChange={(e) => {
+                                handleInput('book', e.value)
+                            }}
                             options={books}
                             placeholder="Select Book"
                             className="w-[330px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
@@ -67,15 +78,26 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                     </label>
                     <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
                         Published Year
-                        <Calendar
+                        <input
+                            type="number"
+                            value={Number(formData?.publishedYear) || ''}
+                            className="w-[150px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
+                            placeholder="2000"
+                            onChange={(e) => {
+                                handleInput('publishedYear', Number(e.target.value))
+                            }}
+                        />
+                        {/* <Calendar
                             dateFormat="mm/dd/yy"
                             placeholder="MM/DD/YYYY"
                             mask="99/99/9999"
                             value={formData?.publishedYear ? new Date(formData.publishedYear) : null}
-                            onChange={(e) => handleInput('publishedYear', e.value?.toISOString() || '')}
+                            onChange={(e) => {
+                                handleInput('publishedYear', e.value?.toISOString() || '')
+                            }}
                             className="w-full mt-[10px]"
                             inputClassName="bg-[#F4F5F9] text-[#3A3541] border border-[#DBDCDE] rounded-[8px] px-3 py-2 h-[46px] w-full focus:outline-none"
-                        />
+                        /> */}
                     </label>
                     <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
                         Author

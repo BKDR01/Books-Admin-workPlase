@@ -27,11 +27,12 @@ const Book = () => {
     { label: 'JPG', value: 'jpg' },
   ];
 
+  // CORRECTED: Updated book categories to match server-side validation.
   const books = [
-    { label: 'Badiiy adabiyotlar', value: 'Badiiy adabiyotlar' },
-    { label: 'Rus adabiyotlar', value: 'Rus adabiyotlar' },
-    { label: 'O’zbek adabiyotlari', value: 'O’zbek adabiyotlari' },
-    { label: 'Prezident asarlari', value: 'Prezident asarlari' },
+    { label: 'Badiiy adabiyotlar', value: 'Badiiy_Adabiyotlar' },
+    { label: 'Rus adabiyotlar', value: 'Rus_Adabiyotlar' },
+    { label: 'O’zbek adabiyotlari', value: 'Ozbek_Adabiyotlari' },
+    { label: 'Prezident asarlari', value: 'Prezident_asarlari' },
     { label: 'Hikoyalar', value: 'Hikoyalar' },
   ];
 
@@ -45,11 +46,15 @@ const Book = () => {
         formData.append("title", form.bookName || '');
         formData.append("language", form.language || '');
         formData.append("format", form.format || '');
-        formData.append("format", form.pages || '');
+        formData.append("pages", form.pages || '');
         formData.append("category", form.book || '');
-        formData.append("publishedYear", form.publishedYear || '');
+        formData.append("publishedYear", form.publishedYear);
+
         formData.append("author", form.author || '');
         formData.append("description", form.description || '');
+
+        // CORRECTED: Add the required 'active' boolean field
+        formData.append("active", true); // Or false, depending on the desired default
 
         // Append files if they exist
         if (currentFiles?.file) formData.append("file", currentFiles.file);
@@ -63,6 +68,10 @@ const Book = () => {
       resetAll();
     } catch (err) {
       console.error('❌ Error uploading:', err);
+      if (err.response) {
+        console.error('Server response data:', err.response.data);
+        console.error('Server response status:', err.response.status);
+      }
       alert('Error uploading books!');
     }
   };
