@@ -48,10 +48,10 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         }}
                         options={items}
                         placeholder="Select Language"
-                        className="w-[150px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
+                        className="w-[150px] py-[13px] pl-[10px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
                     />
                 </label>
-                <div className="w-[100%] flex flex-wrap gap-[30px] mt-[53px]">
+                <div className='flex w-full justify-between my-6'>
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                         Book format
                         <Dropdown
@@ -61,7 +61,7 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             }}
                             options={format}
                             placeholder="Select Format"
-                            className="w-[330px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
+                            className="w-[330px] py-[13px] pl-[10px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
                         />
                     </label>
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
@@ -73,10 +73,12 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             }}
                             options={books}
                             placeholder="Select Book"
-                            className="w-[330px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
+                            className="w-[330px] py-[13px] pl-[10px] bg-[#F4F5F9] border border-[#DBDCDE] rounded-[8px]"
                         />
                     </label>
-                    <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
+                </div>
+                <div className='flex justify-between w-full'>
+                    <label className="flex flex-wrap  flex-col w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
                         Published Year
                         <input
                             type="number"
@@ -99,25 +101,25 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             inputClassName="bg-[#F4F5F9] text-[#3A3541] border border-[#DBDCDE] rounded-[8px] px-3 py-2 h-[46px] w-full focus:outline-none"
                         /> */}
                     </label>
-                    <label className="flex flex-wrap w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
+                    <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                         Author
                         <input
                             type="text"
                             value={formData?.author || ''}
-                            className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
+                            className="w-[100%] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                             onChange={(e) => handleInput('author', e.target.value)}
                         />
                     </label>
-                    <label className="flex flex-wrap w-[100%] gap-[12px] text-[#3A3541] text-[14px]">
-                        Description
-                        <textarea
-                            rows={3}
-                            value={formData?.description || ''}
-                            className="w-full py-[10px] px-[10px] text-[14px] rounded-[8px] resize-none bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
-                            onChange={(e) => handleInput('description', e.target.value)}
-                        />
-                    </label>
                 </div>
+                <label className="flex flex-wrap w-[100%] gap-[12px] text-[#3A3541] text-[14px] mt-6">
+                    Description
+                    <textarea
+                        rows={3}
+                        value={formData?.description || ''}
+                        className="w-full py-[10px] px-[10px] text-[14px] rounded-[8px] resize-none bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
+                        onChange={(e) => handleInput('description', e.target.value)}
+                    />
+                </label>
             </div>
             <div className="mt-[24px] bg-[#F4F5F9] rounded-[8px] w-[100%] px-[30px] py-[18px]">
                 <p className="text-[14px] mb-[30px]">Starting File</p>
