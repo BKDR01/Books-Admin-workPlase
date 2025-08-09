@@ -16,3 +16,4 @@ export const loginUser = (data) => API.post("/admin-auth/login", data);
 export const addBook = (data) => API.post("/admin/books/add", data);
 export const addNews = (data) => API.post("/news/add", data);
 export const deleteNews = (id) => API.delete(`/news/${id}`);
+export const getStatistic = () => API.get(`/admin-auth/statistics`);
