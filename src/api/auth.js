@@ -18,10 +18,10 @@ API.interceptors.request.use(
 );
 
 export const loginUser = (data) => API.post("/admin-auth/login", data);
+export const addBook = (data) => API.post("/admin/books/add", data);
 export const addNews = (data) => API.post("/news/add", data);
 export const getStatistic = () => API.get(`/admin-auth/statistics`);
 export const getNewsById = (id) => API.get(`/news/${id}`);
-export const getAllAdminNews = ({ language = "UZ", page = 1, limit = 10 }) =>
-    API.get("/news/get", { params: { language, page, limit } });
+export const getAllAdminNews = (params) => API.get("/news/get/all", { params });
 export const deleteNews = (id) => API.delete(`/news/${id}`);
 

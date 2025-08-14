@@ -32,7 +32,7 @@ function App() {
               <Delete />
             </ProtectedRoute>
           } />
-          <Route path='details' element={
+          <Route path='/details' element={
             <ProtectedRoute>
               <Detalis />
             </ProtectedRoute>

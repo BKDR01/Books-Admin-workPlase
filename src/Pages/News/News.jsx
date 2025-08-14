@@ -19,7 +19,7 @@ export default function News() {
 
   const handleFiles = (files, type) => {
     const images = files.filter(f => f.type.startsWith('image/'))
-                        .map(f => ({ file: f, url: URL.createObjectURL(f) }));
+      .map(f => ({ file: f, url: URL.createObjectURL(f) }));
 
     if (type === 'thumbnail') {
       setThumbnail(images[0] || null);
@@ -79,7 +79,7 @@ export default function News() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-full mx-auto">
+    <>
       {/* Language Tabs */}
       <div className="flex gap-3 mb-6">
         {LANGUAGES.map(({ code, label }) => (
@@ -129,6 +129,6 @@ export default function News() {
           Create News
         </button>
       </div>
-    </div>
+    </>
   );
 }
