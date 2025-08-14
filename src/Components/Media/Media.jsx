@@ -12,7 +12,7 @@ function Media({ onClose, onSelectImage }) {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) return; 
 
         const imageUrl = URL.createObjectURL(file);
         setPreview(imageUrl);

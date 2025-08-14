@@ -5,7 +5,7 @@ import { Calendar } from 'primereact/calendar';
 function NewsForm({ register, control, errors }) {
     return (
         <>
-            {/* Sarlavha */}
+
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
                     <h1 className='text-2xl'>News</h1>
@@ -13,9 +13,7 @@ function NewsForm({ register, control, errors }) {
                 </div>
             </div>
 
-            {/* 3ta input: Sarlavha, Sana, Manba */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                {/* Sarlavha */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6"> 
                 <div>
                     <label className='text-[#3A3541]'>Yangilik nomi</label>
                     <input
@@ -26,7 +24,6 @@ function NewsForm({ register, control, errors }) {
                     {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                 </div>
 
-                {/* Sana */}
                 <div>
                     <label className="text-[#3A3541] block">Sanasi</label>
                     <Controller
@@ -50,7 +47,6 @@ function NewsForm({ register, control, errors }) {
                     )}
                 </div>
 
-                {/* Manba */}
                 <div>
                     <label className='text-[#3A3541]'>Manbasi</label>
                     <input
@@ -61,8 +57,6 @@ function NewsForm({ register, control, errors }) {
                     {errors.source && <p className="text-red-500 text-sm">{errors.source.message}</p>}
                 </div>
             </div>
-
-            {/* Tavsif (textarea) */}
             <div className="mt-6">
                 <label className='text-[#3A3541]'>Habar tavsifi</label>
                 <textarea

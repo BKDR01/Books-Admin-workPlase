@@ -5,9 +5,8 @@ import { Route, Routes } from 'react-router'
 import Book from './Pages/Book/Book'
 import Detalis from './Pages/MyDetails/Detalis'
 import Layout from './Pages/Layout/Layout'
-import News from './Pages/News/News.jsx';
-import ProtectedRoute from './Components/ProtectedRoute.jsx'
-
+import Delete from './Pages/DeleteNews/DeleteNews.jsx';
+import ProtectedRoute from './Components/ProtectedRoute.jsx' 
 function App() {
   return (
     <>
@@ -30,7 +29,7 @@ function App() {
           } />
           <Route path='news' element={
             <ProtectedRoute>
-              <News />
+              <Delete />
             </ProtectedRoute>
           } />
           <Route path='details' element={
