@@ -1,166 +1,134 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { addNews } from '../../api/auth';
-import NewsForm from './../../Components/NewsForm/NewsForm.jsx';
-import ImageUploader from './../../Components/ImageUploader/ImageUploader.jsx';
-import download from './../../assets/IMG/download.png';
+import NewsForm from '../../Components/NewsForm/NewsForm.jsx';
+import ImageUploader from '../../Components/ImageUploader/ImageUploader.jsx';
+import download from '../../assets/IMG/download.png';
 
-// Frontendda kichik harflar bilan ishlaymiz
-const languages = ['uz', 'ru', 'en'];
-const langLabels = { uz: 'O‘zbekcha', ru: 'Русский', en: 'English' };
+const LANGUAGES = [
+  { code: 'UZ', label: 'O‘zbekcha' },
+  { code: 'RU', label: 'Русский' },
+  { code: 'EN', label: 'English' },
+];
 
-function News() {
-    const [activeLang, setActiveLang] = useState('uz');
-    const [thumbnail, setThumbnail] = useState(null);
-    const [galleryImages, setGalleryImages] = useState([]);
-    const [forms, setForms] = useState({
-        uz: useForm(),
-        ru: useForm(),
-        en: useForm(),
-    });
+export default function News() {
+  const [activeLang, setActiveLang] = useState('UZ');
+  const [thumbnail, setThumbnail] = useState(null);
+  const [gallery, setGallery] = useState([]);
+  const forms = LANGUAGES.reduce((acc, { code }) => ({ ...acc, [code]: useForm() }), {});
 
-    const handleFiles = (files, type) => {
-        const imageFiles = files.filter(file => file.type.startsWith('image/'));
-        const previews = imageFiles.map(file => ({ file, url: URL.createObjectURL(file) }));
+  const handleFiles = (files, type) => {
+    const images = files.filter(f => f.type.startsWith('image/'))
+                        .map(f => ({ file: f, url: URL.createObjectURL(f) }));
 
-        if (type === 'thumbnail') {
-            setThumbnail(previews[0]);
-        } else {
-            const updated = [...galleryImages, ...previews];
-            setGalleryImages(updated);
+    if (type === 'thumbnail') {
+      setThumbnail(images[0] || null);
+    } else {
+      const updated = [...gallery, ...images];
+      setGallery(updated);
+      updateFileInput('galleryInput', updated);
+    }
+  };
 
-            const dataTransfer = new DataTransfer();
-            updated.forEach(item => dataTransfer.items.add(item.file));
-            document.getElementById('galleryInput').files = dataTransfer.files;
-        }
-    };
+  const updateFileInput = (id, files) => {
+    const dt = new DataTransfer();
+    files.forEach(i => dt.items.add(i.file));
+    document.getElementById(id).files = dt.files;
+  };
 
-    const validateLanguageInput = (text, lang) => {
-        const patterns = {
-            uz: /^[\u0400-\u04FF\s\w.,!?'"«»()-]+$/,
-            ru: /^[А-Яа-яЁё\s.,!?'"«»()-]+$/,
-            en: /^[A-Za-z0-9\s.,!?'"()-]+$/,
-        };
-        return patterns[lang].test(text);
-    };
+  const removeGalleryImage = (index) => {
+    const updated = gallery.filter((_, i) => i !== index);
+    setGallery(updated);
+    updateFileInput('galleryInput', updated);
+  };
 
-    const onSubmit = async () => {
-        try {
-            for (let lang of languages) {
-                const values = forms[lang].getValues();
+  const validateForms = () => {
+    if (!thumbnail?.file) return "Thumbnail tanlanmagan";
+    if (!gallery.length) return "Galereya rasmi yuklang";
 
-                if (!values.title || !values.context) {
-                    alert(`${langLabels[lang]} tilidagi sarlavha yoki tavsif bo‘sh bo‘lmasligi kerak`);
-                    return;
-                }
+    for (let { code, label } of LANGUAGES) {
+      const { title, context, publication_date } = forms[code].getValues();
+      if (!title || !context || !publication_date)
+        return `${label} tilidagi ma'lumotlar to‘liq emas`;
+    }
+    return null;
+  };
 
-                if (!values.publication_date) {
-                    alert(`${langLabels[lang]} tilidagi sana bo‘sh bo‘lmasligi kerak`);
-                    return;
-                }
+  const onSubmit = async () => {
+    const error = validateForms();
+    if (error) return alert(error);
 
-                const formData = new FormData();
-                formData.append("title", values.title);
-                formData.append("context", values.context);
-                formData.append("publication_date", new Date(values.publication_date).toISOString().split("T")[0]);
-                formData.append("source", values.source || "");
-                formData.append("language", lang.toUpperCase()); // 🔥 Bu yerda toUpperCase muhim
-                formData.append("active", true);
+    try {
+      for (let { code } of LANGUAGES) {
+        const { title, context, source, publication_date } = forms[code].getValues();
+        const fd = new FormData();
+        fd.append("thumbnail", thumbnail.file);
+        gallery.forEach(img => fd.append("images", img.file));
+        fd.append("title", title);
+        fd.append("context", context);
+        fd.append("source", source || "");
+        fd.append("language", code);
+        fd.append("publication_date", new Date(publication_date).toISOString().split("T")[0]);
+        fd.append("active", true);
+        await addNews(fd);
+      }
+      alert("Barcha tillardagi yangiliklar qo‘shildi");
+    } catch (e) {
+      alert("Xatolik: " + (e.response?.data?.message || "Server xatosi"));
+    }
+  };
 
-                if (thumbnail?.file) {
-                    formData.append("thumbnail", thumbnail.file);
-                } else {
-                    alert("Thumbnail rasm tanlanmagan");
-                    return;
-                }
+  return (
+    <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-full mx-auto">
+      {/* Language Tabs */}
+      <div className="flex gap-3 mb-6">
+        {LANGUAGES.map(({ code, label }) => (
+          <button
+            key={code}
+            onClick={() => setActiveLang(code)}
+            className={`px-4 py-2 border rounded ${activeLang === code ? 'bg-[#6E39CB] text-white' : 'border-[#6E39CB] text-[#6E39CB]'}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-                if (galleryImages.length) {
-                    galleryImages.forEach(img => formData.append("images", img.file));
-                }
-
-                const response = await addNews(formData);
-                console.log(`✅ ${langLabels[lang]} tilida muvaffaqiyatli qo‘shildi`, response.data);
-            }
-
-            alert("Barcha tillarda yangilik muvaffaqiyatli qo‘shildi");
-
-        } catch (error) {
-            console.error("❌ Error:", error);
-            if (error.response) {
-                console.log("🔴 Server response:", error.response.data);
-                alert("Xatolik yuz berdi: " + (error.response.data.message?.[0] || "Boshqa xatolik"));
-            }
-        }
-    };
-
-    const removeGalleryImage = (index) => {
-        const updated = galleryImages.filter((_, i) => i !== index);
-        setGalleryImages(updated);
-
-        const dataTransfer = new DataTransfer();
-        updated.forEach(item => dataTransfer.items.add(item.file));
-        document.getElementById('galleryInput').files = dataTransfer.files;
-    };
-
-    return (
-        <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-full mx-auto">
-            {/* Til Tanlash */}
-            <div className="flex gap-3 mb-6">
-                {languages.map((lang) => (
-                    <button
-                        key={lang}
-                        onClick={() => setActiveLang(lang)}
-                        className={`px-4 py-2 border rounded ${activeLang === lang ? 'bg-[#6E39CB] text-white' : 'border-[#6E39CB] text-[#6E39CB]'}`}
-                    >
-                        {langLabels[lang]}
-                    </button>
-                ))}
-            </div>
-
-            {/* Har bir til uchun form */}
-            {languages.map((lang) => (
-                activeLang === lang && (
-                    <form key={lang} onSubmit={forms[lang].handleSubmit(() => { })}>
-                        <NewsForm
-                            register={forms[lang].register}
-                            control={forms[lang].control}
-                            errors={forms[lang].formState.errors}
-                            validateInput={(value) =>
-                                validateLanguageInput(value, lang) || `Siz ${langLabels[lang]} tilida yozishingiz kerak`
-                            }
-                        />
-                    </form>
-                )
-            ))}
-
-            {/* Rasm yuklash */}
-            <ImageUploader
-                thumbnail={thumbnail}
-                galleryImages={galleryImages}
-                handleFiles={handleFiles}
-                removeGalleryImage={removeGalleryImage}
-                download={download}
+      {LANGUAGES.map(({ code }) =>
+        activeLang === code && (
+          <form key={code} onSubmit={e => e.preventDefault()}>
+            <NewsForm
+              register={forms[code].register}
+              control={forms[code].control}
+              errors={forms[code].formState.errors}
             />
+          </form>
+        )
+      )}
 
-            {/* Submit va Cancel tugmalari */}
-            <div className="flex items-center gap-4 mt-6 justify-end">
-                <button
-                    type="button"
-                    className='px-6 py-2 border-2 rounded-md border-[#6E39CB] text-[#6E39CB] hover:bg-[#f3f0ff] transition'
-                    onClick={() => window.location.reload()}
-                >
-                    Cancel
-                </button>
-                <button
-                    type="button"
-                    className='px-6 py-2 bg-[#6E39CB] text-white rounded-md hover:bg-[#5834b4] transition'
-                    onClick={onSubmit}
-                >
-                    Create News
-                </button>
-            </div>
-        </div>
-    );
+      <ImageUploader
+        thumbnail={thumbnail}
+        galleryImages={gallery}
+        handleFiles={handleFiles}
+        removeGalleryImage={removeGalleryImage}
+        download={download}
+      />
+
+      <div className="flex items-center gap-4 mt-6 justify-end">
+        <button
+          type="button"
+          className='px-6 py-2 border-2 rounded-md border-[#6E39CB] text-[#6E39CB] hover:bg-[#f3f0ff] transition'
+          onClick={() => window.location.reload()}
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          className='px-6 py-2 bg-[#6E39CB] text-white rounded-md hover:bg-[#5834b4] transition'
+          onClick={onSubmit}
+        >
+          Create News
+        </button>
+      </div>
+    </div>
+  );
 }
-
-export default News;
