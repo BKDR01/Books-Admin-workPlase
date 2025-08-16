@@ -24,4 +24,6 @@ export const getStatistic = () => API.get(`/admin-auth/statistics`);
 export const getNewsById = (id) => API.get(`/news/${id}`);
 export const getAllAdminNews = (params) => API.get("/news/get/all", { params });
 export const deleteNews = (id) => API.delete(`/news/${id}`);
+export const getAllLikes = () => API.get("/likes/likes/all");
+export const getUserById = (id) => API.get(`/users/${id}`);
 

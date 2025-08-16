@@ -6,11 +6,12 @@ import Book from './Pages/Book/Book'
 import Detalis from './Pages/MyDetails/Detalis'
 import Layout from './Pages/Layout/Layout'
 import Delete from './Pages/DeleteNews/DeleteNews.jsx';
-import ProtectedRoute from './Components/ProtectedRoute.jsx' 
+import ProtectedRoute from './Components/ProtectedRoute.jsx'
+import Likes from './Pages/Likes/Likes.jsx'
 function App() {
   return (
     <>
-      <Routes>                                                                            
+      <Routes>
         <Route path='/loginin' element={<Loginin />} />
         <Route path='/' element={
           <ProtectedRoute>
@@ -35,6 +36,11 @@ function App() {
           <Route path='/details' element={
             <ProtectedRoute>
               <Detalis />
+            </ProtectedRoute>
+          } />
+          <Route path='likes' element={
+            <ProtectedRoute>
+              <Likes />
             </ProtectedRoute>
           } />
         </Route>
