@@ -1,115 +1,134 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { Calendar } from 'primereact/calendar';
-import download from './../../assets/IMG/download.png';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { addNews } from '../../api/auth';
+import NewsForm from '../../Components/NewsForm/NewsForm.jsx';
+import ImageUploader from '../../Components/ImageUploader/ImageUploader.jsx';
+import download from '../../assets/IMG/download.png';
 
-function News() {
-    const { register, handleSubmit, control } = useForm();
+const LANGUAGES = [
+  { code: 'UZ', label: 'O‘zbekcha' },
+  { code: 'RU', label: 'Русский' },
+  { code: 'EN', label: 'English' },
+];
 
-    const onSubmit = (data) => {
-        console.log(data);
-    };
+export default function News() {
+  const [activeLang, setActiveLang] = useState('UZ');
+  const [thumbnail, setThumbnail] = useState(null);
+  const [gallery, setGallery] = useState([]);
+  const forms = LANGUAGES.reduce((acc, { code }) => ({ ...acc, [code]: useForm() }), {});
 
-    const handleDrop = (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            const input = document.getElementById('fileUploadInput');
-            input.files = dataTransfer.files;
-        }
-    };
+  const handleFiles = (files, type) => {
+    const images = files.filter(f => f.type.startsWith('image/'))
+      .map(f => ({ file: f, url: URL.createObjectURL(f) }));
 
-    return (
-        <div className="bg-white rounded-xl shadow-md py-6 px-6 max-w-4xl w-[800px] mx-auto">
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <h1 className='text-2xl'>News</h1>
-                <p className='text-[#89868D] pt-[10px]'>Create news</p>
+    if (type === 'thumbnail') {
+      setThumbnail(images[0] || null);
+    } else {
+      const updated = [...gallery, ...images];
+      setGallery(updated);
+      updateFileInput('galleryInput', updated);
+    }
+  };
 
-                <div className="flex items-center justify-between mt-[30px] w-[690px]">
-                    <div>
-                        <h1 className='text-[#3A3541]'>News Title</h1>
-                        <input
-                            type="text"
-                            {...register('title')}
-                            className='w-[330px] h-[46px] bg-[#F4F5F9] border-2 rounded-md border-[#DBDCDE] mt-[10px] focus:outline-none focus:border-transparent'
-                        />
-                    </div>
-                    <div className="w-[330px]">
-                        <label className="text-[#3A3541] block">News Date</label>
-                        <Controller
-                            name="newsDate"
-                            control={control}
-                            render={({ field }) => (
-                                <Calendar
-                                    value={field.value || null}
-                                    onChange={(e) => field.onChange(e.value)}
-                                    dateFormat="mm/dd/yy"
-                                    placeholder="MM/DD/YYYY"
-                                    mask="99/99/9999"
-                                    className="w-full mt-[10px]"
-                                    inputClassName="bg-[#F4F5F9] text-[#3A3541] border-2 border-[#DBDCDE] rounded-md px-3 py-1 h-[46px] w-full focus:outline-none"
-                                />
-                            )}
-                        />
-                    </div>
-                </div>
+  const updateFileInput = (id, files) => {
+    const dt = new DataTransfer();
+    files.forEach(i => dt.items.add(i.file));
+    document.getElementById(id).files = dt.files;
+  };
 
-                <div className="mt-[30px]">
-                    <h1 className='text-[#3A3541]'>New Text</h1>
-                    <textarea
-                        {...register('text')}
-                        className='w-[690px] h-[334px] mt-[10px] border-2 rounded-md border-[#DBDCDE] bg-[#F4F5F9] text-2xl focus:outline-none focus:border-transparent resize-none'>
-                    </textarea>
-                </div>
+  const removeGalleryImage = (index) => {
+    const updated = gallery.filter((_, i) => i !== index);
+    setGallery(updated);
+    updateFileInput('galleryInput', updated);
+  };
 
-                <div className="w-[690px] h-[220px] bg-[#F4F5F9] mt-[20px] border-2 rounded-md border-[#DBDCDE]">
-                    <h1 className='text-black pt-[10px] pl-[30px]'>Starting File</h1>
-                    <div
-                        className="w-[630px] h-[125px] border-3 rounded-md border-dashed border-[#6E39CB] mx-auto mt-[25px]"
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
-                    >
-                        <img
-                            src={download}
-                            alt="Upload"
-                            className='mx-auto mt-[10px] cursor-pointer'
-                            onClick={() => document.getElementById('fileUploadInput').click()}
-                        />
+  const validateForms = () => {
+    if (!thumbnail?.file) return "Thumbnail tanlanmagan";
+    if (!gallery.length) return "Galereya rasmi yuklang";
 
-                        <div>
-                            <h1 className='text-center pt-[10px]'>
-                                <span className='text-[#6E39CB]'>Click to upload</span> or drag and drop
-                            </h1>
-                            <h1 className='text-center'>SVG, PNG, JPG or GIF</h1>
-                            <p className='text-[#89868D] text-center'>(max, 800x400px)</p>
-                        </div>
+    for (let { code, label } of LANGUAGES) {
+      const { title, context, publication_date } = forms[code].getValues();
+      if (!title || !context || !publication_date)
+        return `${label} tilidagi ma'lumotlar to‘liq emas`;
+    }
+    return null;
+  };
 
-                        <input
-                            type="file"
-                            id="fileUploadInput"
-                            {...register('file')}
-                            className="hidden"
-                        />
-                    </div>
-                </div>
+  const onSubmit = async () => {
+    const error = validateForms();
+    if (error) return alert(error);
 
-                <div className="flex items-center gap-[15px] mt-[25px] justify-end">
-                    <button
-                        type="button"
-                        className='px-[40px] py-[10px] border-2 rounded-md border-[#6E39CB] text-[#6E39CB]'>
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className='px-[20px] py-[11px] bg-[#6E39CB] text-white rounded-md'>
-                        Create project
-                    </button>
-                </div>
-            </form>
-        </div>
-    );
+    try {
+      for (let { code } of LANGUAGES) {
+        const { title, context, source, publication_date } = forms[code].getValues();
+        const fd = new FormData();
+        fd.append("thumbnail", thumbnail.file);
+        gallery.forEach(img => fd.append("images", img.file));
+        fd.append("title", title);
+        fd.append("context", context);
+        fd.append("source", source || "");
+        fd.append("language", code);
+        fd.append("publication_date", new Date(publication_date).toISOString().split("T")[0]);
+        fd.append("active", true);
+        await addNews(fd);
+      }
+      alert("Barcha tillardagi yangiliklar qo‘shildi");
+    } catch (e) {
+      alert("Xatolik: " + (e.response?.data?.message || "Server xatosi"));
+    }
+  };
+
+  return (
+    <>
+      {/* Language Tabs */}
+      <div className="flex gap-3 mb-6">
+        {LANGUAGES.map(({ code, label }) => (
+          <button
+            key={code}
+            onClick={() => setActiveLang(code)}
+            className={`px-4 py-2 border rounded ${activeLang === code ? 'bg-[#6E39CB] text-white' : 'border-[#6E39CB] text-[#6E39CB]'}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {LANGUAGES.map(({ code }) =>
+        activeLang === code && (
+          <form key={code} onSubmit={e => e.preventDefault()}>
+            <NewsForm
+              register={forms[code].register}
+              control={forms[code].control}
+              errors={forms[code].formState.errors}
+            />
+          </form>
+        )
+      )}
+
+      <ImageUploader
+        thumbnail={thumbnail}
+        galleryImages={gallery}
+        handleFiles={handleFiles}
+        removeGalleryImage={removeGalleryImage}
+        download={download}
+      />
+
+      <div className="flex items-center gap-4 mt-6 justify-end">
+        <button
+          type="button"
+          className='px-6 py-2 border-2 rounded-md border-[#6E39CB] text-[#6E39CB] hover:bg-[#f3f0ff] transition'
+          onClick={() => window.location.reload()}
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          className='px-6 py-2 bg-[#6E39CB] text-white rounded-md hover:bg-[#5834b4] transition'
+          onClick={onSubmit}
+        >
+          Create News
+        </button>
+      </div>
+    </>
+  );
 }
-
-export default News;

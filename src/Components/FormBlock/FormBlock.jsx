@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { IoMdCloudDownload } from "react-icons/io";
 import { Calendar } from 'primereact/calendar';
+import useBookStore from '../../store/useBookStore';
 
 const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemove, files = {}, onChange, initialData, onFileChange }) => {
     const [localData, setLocalData] = useState(initialData || {});

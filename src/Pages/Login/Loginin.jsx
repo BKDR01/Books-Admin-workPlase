@@ -13,7 +13,7 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const res = await loginUser(form) 
+      const res = await loginUser(form)
       login(res.data.accessToken)
 
       navigate("/")

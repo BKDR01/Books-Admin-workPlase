@@ -5,7 +5,6 @@ import { Calendar } from 'primereact/calendar';
 function NewsForm({ register, control, errors }) {
     return (
         <>
-
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
                     <h1 className='text-2xl'>News</h1>
@@ -13,7 +12,7 @@ function NewsForm({ register, control, errors }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6"> 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                 <div>
                     <label className='text-[#3A3541]'>Yangilik nomi</label>
                     <input
@@ -23,7 +22,6 @@ function NewsForm({ register, control, errors }) {
                     />
                     {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                 </div>
-
                 <div>
                     <label className="text-[#3A3541] block">Sanasi</label>
                     <Controller
@@ -42,11 +40,8 @@ function NewsForm({ register, control, errors }) {
                             />
                         )}
                     />
-                    {errors.publication_date && (
-                        <p className="text-red-500 text-sm">{errors.publication_date.message}</p>
-                    )}
+                    {errors.publication_date && <p className="text-red-500 text-sm">{errors.publication_date.message}</p>}
                 </div>
-
                 <div>
                     <label className='text-[#3A3541]'>Manbasi</label>
                     <input
@@ -57,6 +52,7 @@ function NewsForm({ register, control, errors }) {
                     {errors.source && <p className="text-red-500 text-sm">{errors.source.message}</p>}
                 </div>
             </div>
+
             <div className="mt-6">
                 <label className='text-[#3A3541]'>Habar tavsifi</label>
                 <textarea

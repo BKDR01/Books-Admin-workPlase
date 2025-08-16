@@ -5,23 +5,25 @@ import { Route, Routes } from 'react-router'
 import Book from './Pages/Book/Book'
 import Detalis from './Pages/MyDetails/Detalis'
 import Layout from './Pages/Layout/Layout'
-import News from './Pages/News/News.jsx';
+import Delete from './Pages/DeleteNews/DeleteNews.jsx';
 import ProtectedRoute from './Components/ProtectedRoute.jsx'
+import Likes from './Pages/Likes/Likes.jsx'
 function App() {
-
   return (
     <>
-      <Routes>                                                                            
+      <Routes>
         <Route path='/loginin' element={<Loginin />} />
         <Route path='/' element={
           <ProtectedRoute>
             <Layout />
-          </ProtectedRoute>} >
+          </ProtectedRoute>
+        }>
           <Route index element={
             <ProtectedRoute>
               <HomePage />
-            </ProtectedRoute>} />
-          <Route path='/book' element={
+            </ProtectedRoute>
+          } />
+          <Route path='book' element={
             <ProtectedRoute>
               <Book />
             </ProtectedRoute>} />
@@ -31,12 +33,19 @@ function App() {
           </ProtectedRoute>} />
           <Route path='/news' element={
             <ProtectedRoute>
-              <News />
-            </ProtectedRoute>} />
+              <Delete />
+            </ProtectedRoute>
+          } />
           <Route path='/details' element={
             <ProtectedRoute>
               <Detalis />
-            </ProtectedRoute>} />
+            </ProtectedRoute>
+          } />
+          <Route path='likes' element={
+            <ProtectedRoute>
+              <Likes />
+            </ProtectedRoute>
+          } />
         </Route>
       </Routes>
     </>

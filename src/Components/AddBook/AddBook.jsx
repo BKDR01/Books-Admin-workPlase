@@ -108,7 +108,7 @@ function AddBook({ onClose, onUpdate }) {
           </button>
           <div className="w-[215px] flex gap-[15px] mt-[10px]">
             <button
-              onClick={resetAll}
+              onClick={onClose}
               className="w-[100px] h-[32px] text-[12px] rounded-[4px] border border-[#6E39CB]"
             >
               Cancel
