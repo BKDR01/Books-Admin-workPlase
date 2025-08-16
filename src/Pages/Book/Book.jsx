@@ -47,8 +47,8 @@ const Book = () => {
   };
 
   return (
-    <div className="w-[100%] mx-auto p-5 space-y-6">
-      <h1 className="text-2xl font-bold text-center">Список книг</h1>
+    <div className="w-[100%] mx-auto p-5 space-y-6 border">
+      <h1 className="text-2xl font-bold text-center">kitoblar ro'yhati</h1>
 
       <div className='w-full flex justify-end items-center'>
         <button
@@ -59,7 +59,28 @@ const Book = () => {
         </button>
       </div>
 
-      <div className='flex flex-wrap gap-[10px]'>
+      <div className='w-[800px] pt-[20px] rounded-md mx-auto bg-white'>
+
+      {isAdding && (
+        <div className=" bg-opacity-50 flex items-center justify-center">
+          <AddBook
+            onClose={() => setIsAdding(false)}
+            onUpdate={fetchBooks}
+          />
+        </div>
+      )}
+
+      {editingBookId && (
+        <div className="bg-opacity-50 flex items-center justify-center">
+          <EditBook
+            bookId={editingBookId}
+            onClose={() => setEditingBookId(null)}
+            onUpdate={fetchBooks}
+          />
+        </div>
+      )}
+
+      <div className='w-[750px] mt-[50px] mx-auto flex-wrap gap-[10px] p-2'>
         {books.map((book) => (
           <BookCard 
             key={book.id} 
@@ -70,24 +91,8 @@ const Book = () => {
         ))}
       </div>
 
-      {isAdding && (
-        <div className="fixed inset-0 z-50 bg-black/50 bg-opacity-50 flex items-center justify-center">
-          <AddBook
-            onClose={() => setIsAdding(false)}
-            onUpdate={fetchBooks}
-          />
-        </div>
-      )}
+      </div>
 
-      {editingBookId && (
-        <div className="fixed inset-0 z-50 bg-black/50 bg-opacity-50 flex items-center justify-center">
-          <EditBook
-            bookId={editingBookId}
-            onClose={() => setEditingBookId(null)}
-            onUpdate={fetchBooks}
-          />
-        </div>
-      )}
     </div>
   );
 };

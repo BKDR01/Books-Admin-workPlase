@@ -13,9 +13,9 @@ const BookCard = ({ book, onEdit, onDelete }) => {
           <h2 className="text-[20px] text-[#202020] font-bold">{book.title || "Неизвестная книга"}</h2>
           <div className="flex justify-between mt-[15px] items-center">
             <div>
-              <p>Формат: {book.format || "-"}</p>
-              <p>Кол-во страниц: {book.pages || "-"}</p>
-              <p>Язык: {book.language || "-"}</p>
+              <p>formati: {book.format || "-"}</p>
+              <p>betlar sont: {book.pages || "-"}</p>
+              <p>tili: {book.language || "-"}</p>
             </div>
           </div>
       <div className="space-x-2 mt-4">
@@ -23,13 +23,13 @@ const BookCard = ({ book, onEdit, onDelete }) => {
           onClick={() => onEdit(book)}
           className="bg-blue-500 text-white px-3 py-1 rounded"
         >
-          Редактировать
+          edit
         </button>
         <button
           onClick={() => onDelete(book.id)}
           className="bg-red-500 text-white px-3 py-1 rounded"
         >
-          Удалить
+          delete
         </button>
       </div>
         </div>
