@@ -47,7 +47,7 @@ const Book = () => {
   };
 
   return (
-    <div className="w-[100%] mx-auto p-5 space-y-6 border">
+    <div className="w-[100%] mx-auto p-5 space-y-6">
       <h1 className="text-2xl font-bold text-center">kitoblar ro'yhati</h1>
 
       <div className='w-full flex justify-end items-center'>
