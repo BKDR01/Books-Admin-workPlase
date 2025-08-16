@@ -1,15 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { IoMdCloudDownload } from "react-icons/io";
-import { Calendar } from 'primereact/calendar';
 import useBookStore from '../../store/useBookStore';
+import { ProgressBar } from 'primereact/progressbar';
 
 const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemove, files, onChange }) => {
 
     const formData = useBookStore((state) => state.formDataList[index]);
 
+    const [uploadProgress, setUploadProgress] = useState({ image: 0, file: 0 });
+
     const handleInput = (key, value) => {
         onChange(index, key, value);
+    };
+
+    const handleFileAddWithProgress = (type, uploadedFile) => {
+        handleFileAdd(index, type, uploadedFile);
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            setUploadProgress(prev => ({
+                ...prev,
+                [type]: progress
+            }));
+
+            if (progress >= 100) {
+                clearInterval(interval);
+                setUploadProgress(prev => ({
+                    ...prev,
+                    [type]: 100
+                }));
+            }
+        }, 300);
     };
 
     return (
@@ -22,7 +45,6 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         value={formData?.bookName || ''}
                         className="w-[330px] py-[13px] pl-[10px] text-[14px] rounded-[8px] bg-[#F4F5F9] border border-[#DBDCDE] focus:outline-0"
                         onChange={(e) => {
-
                             handleInput('bookName', e.target.value)
                         }}
                     />
@@ -78,7 +100,7 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                     </label>
                 </div>
                 <div className='flex justify-between w-full'>
-                    <label className="flex flex-wrap  flex-col w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
+                    <label className="flex flex-wrap flex-col w-[45%] gap-[12px] text-[#3A3541] text-[14px]">
                         Published Year
                         <input
                             type="number"
@@ -89,17 +111,6 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                                 handleInput('publishedYear', Number(e.target.value))
                             }}
                         />
-                        {/* <Calendar
-                            dateFormat="mm/dd/yy"
-                            placeholder="MM/DD/YYYY"
-                            mask="99/99/9999"
-                            value={formData?.publishedYear ? new Date(formData.publishedYear) : null}
-                            onChange={(e) => {
-                                handleInput('publishedYear', e.value?.toISOString() || '')
-                            }}
-                            className="w-full mt-[10px]"
-                            inputClassName="bg-[#F4F5F9] text-[#3A3541] border border-[#DBDCDE] rounded-[8px] px-3 py-2 h-[46px] w-full focus:outline-none"
-                        /> */}
                     </label>
                     <label className="flex flex-wrap w-[330px] gap-[12px] text-[#3A3541] text-[14px]">
                         Author
@@ -132,7 +143,7 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             className="hidden"
                             onChange={(e) => {
                                 if (e.target.files?.[0]) {
-                                    handleFileAdd(index, 'image', e.target.files[0]);
+                                    handleFileAddWithProgress('image', e.target.files[0]);
                                 }
                             }}
                         />
@@ -152,7 +163,7 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                             name='file'
                             onChange={(e) => {
                                 if (e.target.files?.[0]) {
-                                    handleFileAdd(index, 'file', e.target.files[0]);
+                                    handleFileAddWithProgress('file', e.target.files[0]);
                                 }
                             }}
                         />
@@ -165,61 +176,63 @@ const FormBlock = ({ index, items, format, books, handleFileAdd, handleFileRemov
                         </p>
                     </label>
                 </div>
-{files[index] && (
-  <div className="mt-4 grid grid-cols-2 gap-4">
-    {['image', 'file'].map((type) => (
-      files[index][type] && (
-        <div
-          key={type}
-          className="flex items-center gap-4 p-3 border rounded-lg bg-white shadow-sm relative group"
-        >
-          {/* Превью или иконка */}
-          {type === 'image' ? (
-            <img
-              src={URL.createObjectURL(files[index][type])}
-              alt="preview"
-              className="w-16 h-16 object-cover rounded"
-            />
-          ) : (
-            <div className="w-16 h-16 flex items-center justify-center bg-red-100 rounded">
-              <span className="text-red-600 font-bold text-lg">PDF</span>
-            </div>
-          )}
+                {files[index] && (
+                    <div className="mt-4 grid grid-cols-2 gap-4">
+                        {['image', 'file'].map((type) => (
+                            files[index][type] && (
+                                <div
+                                    key={type}
+                                    className="flex items-center gap-4 p-3 border rounded-lg bg-white shadow-sm relative group"
+                                >
+                                    {/* Preview or icon */}
+                                    {type === 'image' ? (
+                                        <img
+                                            src={URL.createObjectURL(files[index][type])}
+                                            alt="preview"
+                                            className="w-16 h-16 object-cover rounded"
+                                        />
+                                    ) : (
+                                        <div className="w-16 h-16 flex items-center justify-center bg-red-100 rounded">
+                                            <span className="text-red-600 font-bold text-lg">
+                                                {files[index][type].name.split('.').pop().toUpperCase()}
+                                            </span>
+                                        </div>
+                                    )}
 
-          {/* Информация о файле */}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {files[index][type].name}
-            </p>
-            <p className="text-xs text-gray-500">
-              {(files[index][type].size / 1024).toFixed(0)} Kb
-            </p>
+                                    {/* File information */}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-gray-900 truncate">
+                                            {files[index][type].name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            {(files[index][type].size / 1024).toFixed(0)} Kb
+                                        </p>
 
-            {/* Прогресс (пока статично 80%) */}
-            <div className="flex items-center gap-2 mt-1">
-              <div className="w-full bg-gray-200 h-2 rounded">
-                <div
-                  className="bg-green-500 h-2 rounded"
-                  style={{ width: "80%" }}
-                ></div>
-              </div>
-              <span className="text-xs text-gray-600">80%</span>
-            </div>
-          </div>
+                                        {/* PrimeReact ProgressBar komponenti */}
+                                        <div className="flex items-center gap-2 mt-1">
+                                            <ProgressBar
+                                                value={uploadProgress[type]}
+                                                showValue={false}
+                                                className="w-full h-2 rounded bg-red-400"
+                                            />
+                                            <span className="text-xs text-gray-600">{uploadProgress[type]}%</span>
+                                        </div>
+                                    </div>
 
-          {/* Крестик удалить */}
-          <button
-            onClick={() => handleFileRemove(index, type)}
-            className="absolute top-1 right-1 bg-black/50 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
-          >
-            ✖
-          </button>
-        </div>
-      )
-    ))}
-  </div>
-)}
-
+                                    {/* Remove button */}
+                                    {uploadProgress[type] >= 100 && (
+                                        <button
+                                            onClick={() => handleFileRemove(index, type)}
+                                            className="absolute top-1 right-1 bg-black/50 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition"
+                                        >
+                                            ✖
+                                        </button>
+                                    )}
+                                </div>
+                            )
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
