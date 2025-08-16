@@ -25,6 +25,10 @@ function App() {
             <ProtectedRoute>
               <Book />
             </ProtectedRoute>} />
+          <Route path='/bookList' element={
+            <ProtectedRoute>
+              
+          </ProtectedRoute>} />
           <Route path='/news' element={
             <ProtectedRoute>
               <News />

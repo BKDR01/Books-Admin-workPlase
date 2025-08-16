@@ -1,156 +1,93 @@
-import React, { useState } from 'react';
-import FormBlock from '../../Components/FormBlock/FormBlock';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AddBook from './../../Components/AddBook/AddBook.jsx';
+import BookCard from './../../Components/BookCard/BookCard.jsx';
+import EditBook from './../../Components/EditBooks/EditBook.jsx';
+
+const API_BASE = 'https://lib.qaxramonov.uz/api/v1/admin/books';
 
 const Book = () => {
-  const [formDataList, setFormDataList] = useState([{}]);
-  const [files, setFiles] = useState({});
-  const yourToken = localStorage.getItem('token');
+  const [books, setBooks] = useState([]);
+  const [editingBookId, setEditingBookId] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
+  const token = localStorage.getItem('accessToken');
 
-  const items = [
-    { label: 'Uzbekcha', value: 'UZ' },
-    { label: 'Ruscha', value: 'RU' },
-    { label: 'Inglizcha', value: 'EN' },
-  ];
+  useEffect(() => {
+    if (!token) {
+      console.warn('❌ Токен отсутствует. Перенаправление на страницу входа.');
+      // window.location.href = '/login';
+      return;
+    }
+    fetchBooks();
+  }, [token]);
 
-  const format = [
-    { label: 'PDF', value: 'pdf' },
-    { label: 'SVG', value: 'svg' },
-    { label: 'PNG', value: 'png' },
-    { label: 'JPG', value: 'jpg' },
-  ];
-
-  const books = [
-    { label: 'Baddiy adabiyotlar', value: 'Baddiy adabiyotlar' },
-    { label: 'Rus adabiyotlar', value: 'Rus adabiyotlar' },
-    { label: 'O’zbek adabiyotlari', value: 'O’zbek adabiyotlari' },
-    { label: 'Prezident asarlari', value: 'Prezident asarlari' },
-    { label: 'Hikoyalar', value: 'Hikoyalar' },
-  ];
-
-  // Добавление новой формы
-  const handleAdd = () => {
-    setFormDataList([...formDataList, {}]);
-  };
-
-  // Добавление файла
-  const handleFileAdd = (formIndex, file) => {
-    const updated = { ...files };
-    updated[formIndex] = [...(updated[formIndex] || []), file];
-    setFiles(updated);
-  };
-
-  // Удаление файла
-  const handleFileRemove = (formIndex, fileIndex) => {
-    const updated = { ...files };
-    if (!updated[formIndex]) return;
-    updated[formIndex].splice(fileIndex, 1);
-    setFiles({ ...updated });
-  };
-
-  // Изменение данных формы
-  const handleFormDataChange = (index, key, value) => {
-    const updated = [...formDataList];
-    updated[index] = { ...updated[index], [key]: value };
-    setFormDataList(updated);
-  };
-
-  // Отправка данных
-  const postBookData = async () => {
+  const fetchBooks = async () => {
     try {
-      const formData = new FormData();
-
-      formDataList.forEach((form, i) => {
-        for (const key in form) {
-          if (form[key] !== undefined && form[key] !== null) {
-            formData.append(`books[${i}][${key}]`, form[key]);
-          }
-        }
-
-        if (files[i]) {
-          files[i].forEach((file) => {
-            formData.append(`books[${i}][files][]`, file);
-          });
-        }
+      const res = await axios.get(`${API_BASE}/getBooks/all`, {
+        params: { page: 1, limit: 100 },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
-      console.log('📦 FormData to send:');
-      for (let pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
-
-      const res = await axios.post(
-        'https://lib.qaxramonov.uz/api/v1/admin/books/add',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${yourToken}`,
-          },
-        }
-      );
-
-      console.log('✅ Success:', res.data);
-      alert('Books uploaded successfully!');
-      // Очистка после отправки
-      setFormDataList([{}]);
-      setFiles({});
+      setBooks(res.data.data);
     } catch (err) {
-      console.error('❌ Error uploading:', err);
-      alert('Error uploading books!');
+      console.error('❌ Ошибка загрузки книг:', err.response?.data || err.message);
+    }
+  };
+
+  const deleteBook = async (id) => {
+    try {
+      await axios.delete(`${API_BASE}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      fetchBooks();
+      console.log(`✅ Книга с ID ${id} успешно удалена.`);
+    } catch (err) {
+      console.error('❌ Ошибка удаления книги:', err.response?.data || err.message);
+      alert('Не удалось удалить книгу.');
     }
   };
 
   return (
-    <div className="w-[750px] p-[30px] rounded-[8px] bg-white shadow-[0_0_4px_0_#00000026] mx-auto font-[Lato]">
-      <div>
-        <h2 className="text-[20px] font-medium">Book project</h2>
-        <p className="text-[12.64px] text-[#89868D] mt-[10px]">Create new Book</p>
+    <div className="w-[100%] mx-auto p-5 space-y-6">
+      <h1 className="text-2xl font-bold text-center">Список книг</h1>
+
+      <div className='w-full flex justify-end items-center'>
+        <button
+          onClick={() => setIsAdding(true)}
+          className='p-2 bg-green-500 rounded-md text-white'
+        >
+          Добавить +
+        </button>
       </div>
 
-      {/* Все формы */}
-      {formDataList.map((_, index) => (
-        <FormBlock
-          key={index}
-          index={index}
-          items={items}
-          format={format}
-          books={books}
-          handleFileAdd={handleFileAdd}
-          handleFileRemove={handleFileRemove}
-          files={files}
-          onChange={handleFormDataChange}
-        />
-      ))}
+      <div className='flex flex-wrap gap-[10px]'>
+        {books.map((book) => (
+          <BookCard 
+            key={book.id} 
+            book={book} 
+            onEdit={() => setEditingBookId(book.id)}
+            onDelete={deleteBook} 
+          />
+        ))}
+      </div>
 
-      {/* Кнопки */}
-      <div className="mt-[24px] flex justify-end">
-        <div className="w-[215px] flex justify-end flex-wrap">
-          <button
-            onClick={handleAdd}
-            className="w-[70px] h-[32px] text-white bg-[#6E39CB] rounded-[4px]"
-          >
-            + Add
-          </button>
-          <div className="w-[215px] flex gap-[15px] mt-[127px]">
-            <button
-              onClick={() => {
-                setFormDataList([{}]);
-                setFiles({});
-              }}
-              className="w-[100px] h-[32px] text-[12px] rounded-[4px] border border-[#6E39CB]"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={postBookData}
-              className="w-[100px] h-[32px] text-[12px] rounded-[4px] bg-[#6E39CB] text-white"
-            >
-              Create project
-            </button>
-          </div>
+      {isAdding && (
+        <div className="fixed inset-0 z-50 bg-black/50 bg-opacity-50 flex items-center justify-center">
+          <AddBook
+            onClose={() => setIsAdding(false)}
+            onUpdate={fetchBooks}
+          />
         </div>
-      </div>
+      )}
+
+      {editingBookId && (
+        <div className="fixed inset-0 z-50 bg-black/50 bg-opacity-50 flex items-center justify-center">
+          <EditBook
+            bookId={editingBookId}
+            onClose={() => setEditingBookId(null)}
+            onUpdate={fetchBooks}
+          />
+        </div>
+      )}
     </div>
   );
 };
